@@ -1,0 +1,33 @@
+{
+  "name": "@aisec-foundation/cli",
+  "version": "0.1.0",
+  "description": "CLI for aisec — AI-powered web security scanner",
+  "type": "module",
+  "bin": {
+    "aisec": "./bin/aisec.mjs"
+  },
+  "files": [
+    "bin/",
+    "lib/"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "security",
+    "scanner",
+    "pentest",
+    "ai",
+    "cli"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aisec-foundation/cli-node.git"
+  },
+  "dependencies": {
+    "commander": "^12.1.0",
+    "chalk": "^5.3.0",
+    "ws": "^8.18.0"
+  }
+}
