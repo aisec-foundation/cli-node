@@ -29,6 +29,7 @@ program
   .option("--cookies <json>", "Session cookies as JSON or @file")
   .option("--proxy <url>", "Proxy URL")
   .option("--headers <headers>", "Custom headers: 'Key:Val,Key2:Val2' or @file")
+  .option("--fail-on <severity>", "Exit 1 if findings at this severity or above (critical, high, medium, low)")
   .option("--token <token>", "API token (or AISEC_TOKEN env)")
   .option("--api <url>", "API URL override")
   .action(cmdScan);
