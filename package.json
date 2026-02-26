@@ -1,5 +1,5 @@
 {
-  "name": "@aisec-foundation/cli",
+  "name": "aisec-cli",
   "version": "0.1.0",
   "description": "CLI for aisec — AI-powered web security scanner",
   "type": "module",
