@@ -26,7 +26,7 @@ function resolveProfile(opts) {
 }
 
 function buildBody(target, opts) {
-  const body = { target };
+  const body = { target, source: opts.source || "cli" };
   const profile = resolveProfile(opts);
   if (profile) body.profile = profile;
   if (opts.engine !== "claude") body.engine = opts.engine;
@@ -144,7 +144,7 @@ console.log("\n── buildBody ──");
 
 test("minimal body", () => {
   const b = buildBody("https://example.com", { engine: "claude" });
-  assert.deepEqual(b, { target: "https://example.com" });
+  assert.deepEqual(b, { target: "https://example.com", source: "cli" });
 });
 
 test("all options", () => {
@@ -185,6 +185,16 @@ test("claude engine is not sent", () => {
 test("profile from --full", () => {
   const b = buildBody("https://t.com", { engine: "claude", full: true });
   assert.equal(b.profile, "full");
+});
+
+test("default source is cli", () => {
+  const b = buildBody("https://t.com", { engine: "claude" });
+  assert.equal(b.source, "cli");
+});
+
+test("source override to ci", () => {
+  const b = buildBody("https://t.com", { engine: "claude", source: "ci" });
+  assert.equal(b.source, "ci");
 });
 
 console.log("\n── formatDuration ──");
