@@ -1,6 +1,6 @@
 # @aisec-foundation/cli
 
-CLI for **aisec** — AI-powered web security scanner.
+CLI for [AISEC](https://aisec.tools) — AI-powered web application security scanner. Autonomous pentesting from your terminal.
 
 ## Quick Start
 
@@ -16,7 +16,7 @@ npm i -g @aisec-foundation/cli
 
 ## Authentication
 
-Get your token at [app.aisec.tools/developer](https://app.aisec.tools/developer).
+Get your token at the [AISEC Dashboard](https://app.aisec.tools/developer).
 
 ```bash
 export AISEC_TOKEN=ask_...
@@ -48,6 +48,14 @@ aisec scans -l 20     # Last 20 scans
 ```bash
 aisec status          # Check connection & auth
 ```
+
+## Links
+
+- [AISEC Website](https://aisec.tools) — AI-powered penetration testing platform
+- [Dashboard](https://app.aisec.tools) — manage scans and findings
+- [How It Works](https://aisec.tools/how-it-works) — platform documentation
+- [Pricing](https://aisec.tools/pricing) — plans and credits
+- [Python CLI](https://github.com/aisec-foundation/cli-python) — alternative CLI
 
 ## License
 
