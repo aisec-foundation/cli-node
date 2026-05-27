@@ -1,17 +1,17 @@
-# @aisec-foundation/cli
+# aisec-cli
 
 CLI for [AISEC](https://aisec.tools) — AI-powered web application security scanner. Autonomous pentesting from your terminal.
 
 ## Quick Start
 
 ```bash
-npx @aisec-foundation/cli scan https://target.com --token YOUR_TOKEN
+npx aisec-cli scan https://target.com --token YOUR_TOKEN
 ```
 
 Or install globally:
 
 ```bash
-npm i -g @aisec-foundation/cli
+npm i -g aisec-cli
 ```
 
 ## Authentication
