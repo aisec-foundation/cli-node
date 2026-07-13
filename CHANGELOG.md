@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.1
+
+- Normalize the executable and repository metadata for npm 12 publishing.
+
 ## 1.1.0
 
 - Align the package and executable version.

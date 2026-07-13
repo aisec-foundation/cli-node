@@ -1,10 +1,10 @@
 {
   "name": "aisec-cli",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "CLI for aisec — AI-powered web security scanner",
   "type": "module",
   "bin": {
-    "aisec": "./bin/aisec.mjs"
+    "aisec": "bin/aisec.mjs"
   },
   "files": [
     "bin/",
@@ -28,7 +28,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/aisec-foundation/cli-node.git"
+    "url": "git+https://github.com/aisec-foundation/cli-node.git"
   },
   "dependencies": {
     "chalk": "^5.3.0",

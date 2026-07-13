@@ -39,5 +39,6 @@ jobs:
           npm run check
           npm test
           test "$(node bin/aisec.mjs --version)" = "$(node -p 'require("./package.json").version')"
+          node -e 'const p=require("./package.json"); if (p.bin?.aisec !== "bin/aisec.mjs" || p.repository?.url !== "git+https://github.com/aisec-foundation/cli-node.git") process.exit(1)'
           npm audit --omit=dev --audit-level=high
           npm pack --dry-run --json >/dev/null
