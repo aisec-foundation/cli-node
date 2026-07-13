@@ -1,14 +1,18 @@
 #!/usr/bin/env node
 
 import { program } from "commander";
+import { createRequire } from "node:module";
 import { cmdScan } from "../lib/scan.mjs";
 import { cmdScans } from "../lib/scans.mjs";
 import { cmdStatus } from "../lib/status.mjs";
 
+const require = createRequire(import.meta.url);
+const { version } = require("../package.json");
+
 program
   .name("aisec")
   .description("AI-powered web security scanner")
-  .version("0.1.0");
+  .version(version);
 
 program
   .command("scan <target>")

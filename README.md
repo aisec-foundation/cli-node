@@ -14,6 +14,8 @@ Or install globally:
 npm i -g aisec-cli
 ```
 
+Requires Node.js 18 or newer.
+
 ## Authentication
 
 Get your token at the [AISEC Dashboard](https://app.aisec.tools/developer).
@@ -34,7 +36,7 @@ aisec scan https://target.com --aggressive # Full port scan, sqlmap
 aisec scan https://target.com --stealth    # WAF evasion, slow
 ```
 
-Options: `--engine`, `--model`, `--temperature`, `--max-iterations`, `--scope`, `--timeout`, `--skip-recon`, `--skip-browser`, `--username`, `--password`, `--cookies`, `--proxy`, `--headers`
+Run `aisec scan --help` for the complete option list, including authenticated scans, scope exclusions, tool controls, project assignment, and CI severity thresholds.
 
 ### `aisec scans`
 
@@ -60,3 +62,7 @@ aisec status          # Check connection & auth
 ## License
 
 MIT
+
+## Release
+
+Publishing is performed from a GitHub release whose tag matches `v<package version>`. The release workflow verifies the tagged code, then publishes to npm with trusted publishing and provenance.

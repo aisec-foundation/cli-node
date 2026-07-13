@@ -1,6 +1,6 @@
 {
   "name": "aisec-cli",
-  "version": "0.2.1",
+  "version": "1.1.0",
   "description": "CLI for aisec — AI-powered web security scanner",
   "type": "module",
   "bin": {
@@ -8,10 +8,12 @@
   },
   "files": [
     "bin/",
-    "lib/"
+    "lib/",
+    "CHANGELOG.md"
   ],
   "scripts": {
-    "test": "node test/unit.mjs"
+    "test": "node test/unit.mjs",
+    "check": "node --check bin/aisec.mjs && node --check lib/api.mjs && node --check lib/config.mjs && node --check lib/scan.mjs && node --check lib/scans.mjs && node --check lib/status.mjs"
   },
   "engines": {
     "node": ">=18"
@@ -31,6 +33,6 @@
   "dependencies": {
     "chalk": "^5.3.0",
     "commander": "^12.1.0",
-    "ws": "^8.18.0"
+    "ws": "^8.21.0"
   }
 }

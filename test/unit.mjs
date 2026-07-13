@@ -6,52 +6,15 @@
  */
 
 import { strict as assert } from "node:assert";
-
-// ── Inline copies of pure functions from lib/ (no side effects) ──
-
-const SEV_RANK = { critical: 4, high: 3, medium: 2, low: 1, info: 0 };
-
-function sevAboveThreshold(finding, threshold) {
-  if (!threshold) return false;
-  const fRank = SEV_RANK[(finding || "").toLowerCase()] ?? -1;
-  const tRank = SEV_RANK[threshold.toLowerCase()] ?? 99;
-  return fRank >= tRank;
-}
-
-function resolveProfile(opts) {
-  if (opts.full) return "full";
-  if (opts.aggressive) return "aggressive";
-  if (opts.stealth) return "stealth";
-  return undefined;
-}
-
-function buildBody(target, opts) {
-  const body = { target, source: opts.source || "cli" };
-  const profile = resolveProfile(opts);
-  if (profile) body.profile = profile;
-  if (opts.engine !== "claude") body.engine = opts.engine;
-  if (opts.model) body.model = opts.model;
-  if (opts.temperature != null) body.temperature = opts.temperature;
-  if (opts.maxIterations) body.max_iterations = opts.maxIterations;
-  if (opts.scope) body.scope = opts.scope;
-  if (opts.timeout != null) body.timeout_minutes = opts.timeout;
-  if (opts.skipRecon) body.skip_recon = true;
-  if (opts.skipBrowser) body.skip_browser = true;
-  if (opts.username) body.username = opts.username;
-  if (opts.password) body.password = opts.password;
-  if (opts.proxy) body.proxy = opts.proxy;
-  return body;
-}
-
-function formatDuration(seconds) {
-  const m = Math.floor(seconds / 60);
-  const s = seconds % 60;
-  return m > 0 ? `${m}m ${s}s` : `${s}s`;
-}
-
-function wsUrl(apiUrl) {
-  return apiUrl.replace(/^http/, "ws");
-}
+import {
+  buildBody,
+  dashboardUrl,
+  formatDuration,
+  parseCommaSeparated,
+  resolveProfile,
+  sevAboveThreshold,
+} from "../lib/scan.mjs";
+import { wsUrl } from "../lib/config.mjs";
 
 // ── Tests ──
 
@@ -128,6 +91,10 @@ test("--aggressive → aggressive", () => {
   assert.equal(resolveProfile({ aggressive: true }), "aggressive");
 });
 
+test("--bounty → bounty", () => {
+  assert.equal(resolveProfile({ bounty: true }), "bounty");
+});
+
 test("--stealth → stealth", () => {
   assert.equal(resolveProfile({ stealth: true }), "stealth");
 });
@@ -197,6 +164,36 @@ test("source override to ci", () => {
   assert.equal(b.source, "ci");
 });
 
+test("advanced options use API field names", () => {
+  const b = buildBody("https://t.com", {
+    engine: "claude",
+    scanType: "network",
+    reviewModel: "reviewer",
+    costCap: 5,
+    customInstructions: "focus on auth",
+    disableTools: "sqlmap, nikto",
+    disableEnrichments: "shodan",
+    outOfScope: "cdn.t.com, static.t.com",
+    wordlist: "big",
+    autoCompact: true,
+    projectId: "project-1",
+  });
+  assert.equal(b.scan_type, "network");
+  assert.equal(b.review_model, "reviewer");
+  assert.equal(b.cost_cap, 5);
+  assert.equal(b.custom_instructions, "focus on auth");
+  assert.deepEqual(b.disabled_tools, ["sqlmap", "nikto"]);
+  assert.deepEqual(b.disabled_enrichments, ["shodan"]);
+  assert.deepEqual(b.out_of_scope, ["cdn.t.com", "static.t.com"]);
+  assert.equal(b.wordlist, "big");
+  assert.equal(b.auto_compact, true);
+  assert.equal(b.project_id, "project-1");
+});
+
+test("comma-separated lists trim and drop empty values", () => {
+  assert.deepEqual(parseCommaSeparated("sqlmap, nikto, ,nuclei"), ["sqlmap", "nikto", "nuclei"]);
+});
+
 console.log("\n── formatDuration ──");
 
 test("seconds only", () => {
@@ -223,6 +220,14 @@ test("https → wss", () => {
 
 test("http → ws", () => {
   assert.equal(wsUrl("http://localhost:8000"), "ws://localhost:8000");
+});
+
+test("dashboard URL is only emitted for production API", () => {
+  assert.equal(
+    dashboardUrl("https://api.aisec.tools", "scan-1"),
+    "https://app.aisec.tools/scans/scan-1",
+  );
+  assert.equal(dashboardUrl("https://staging.example", "scan-1"), null);
 });
 
 console.log("\n── fail-on integration logic ──");

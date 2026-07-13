@@ -1,0 +1,50 @@
+name: Publish release
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: cli-node-release
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: ${{ github.event.release.prerelease == false }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: npm
+    steps:
+      - name: Checkout released CLI
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+        with:
+          ref: ${{ github.event.release.tag_name }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Verify release
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: |
+          VERSION=$(node -p 'require("./package.json").version')
+          test "$RELEASE_TAG" = "v$VERSION"
+          git merge-base --is-ancestor HEAD refs/remotes/origin/main
+      - name: Set up Node.js
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
+        with:
+          node-version: "24"
+          registry-url: https://registry.npmjs.org
+          package-manager-cache: false
+      - name: Verify package
+        run: |
+          npm install --global npm@12.0.1
+          npm ci
+          npm run check
+          npm test
+          npm audit --omit=dev --audit-level=high
+          npm pack --dry-run --json >/dev/null
+      - name: Publish with trusted publishing
+        run: npm publish --access public --provenance
